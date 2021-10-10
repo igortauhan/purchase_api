@@ -71,6 +71,21 @@ namespace purchase_api.Controllers
             return NoContent();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePurchase(long id)
+        {
+            var purchase = await _context.Purchases.FindAsync(id);
+            if (purchase == null)
+            {
+                return NotFound();
+            }
+
+            _context.Purchases.Remove(purchase);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
         private bool PurchaseExists(long id)
         {
             return _context.Purchases.Any(e => e.Id == id);
