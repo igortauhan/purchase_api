@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using purchase_api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace purchase_api.Controllers
 {
@@ -39,6 +40,40 @@ namespace purchase_api.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetPurchase), new { id = purchase.Id }, purchase);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutPurchase(long id, Purchase purchase)
+        {
+            if (id != purchase.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(purchase).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PurchaseExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        private bool PurchaseExists(long id)
+        {
+            return _context.Purchases.Any(e => e.Id == id);
         }
     }
 }
