@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace purchase_api.model
+namespace purchase_api.Models
 {
     public class Purchase
     {

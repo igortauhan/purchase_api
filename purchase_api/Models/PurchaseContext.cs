@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace purchase_api.model
+namespace purchase_api.Models
 {
     public class PurchaseContext : DbContext
     {

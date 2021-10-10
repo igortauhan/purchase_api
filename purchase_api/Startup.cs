@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using purchase_api.model;
+using purchase_api.Models;
 
 namespace purchase_api
 {
