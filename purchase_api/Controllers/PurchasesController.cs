@@ -46,17 +46,11 @@ namespace purchase_api.Controllers
         [HttpPost]
         public async Task<ActionResult<PurchaseDTO>> PostPurchase(PurchaseDTO purchaseDTO)
         {
-            var purchase = new Purchase
-            {
-                Name = purchaseDTO.Name,
-                Value = purchaseDTO.Value,
-                BuyDate = purchaseDTO.BuyDate
-            };
+            var purchase = _purchaseService.FromDTO(purchaseDTO);
 
-            _context.Purchases.Add(purchase);
-            await _context.SaveChangesAsync();
+            var obj = await _purchaseService.Insert(purchase);
 
-            return CreatedAtAction(nameof(GetPurchase), new { id = purchase.Id }, ToDTO(purchase));
+            return CreatedAtAction(nameof(GetPurchase), new { id = obj.Id }, obj);
         }
 
         [HttpPut("{id}")]

@@ -35,6 +35,22 @@ namespace purchase_api.Services
             return ToDTO(purchase);
         }
 
+        public async Task<PurchaseDTO> Insert(Purchase purchase)
+        {
+            _context.Purchases.Add(purchase);
+            await _context.SaveChangesAsync();
+
+            return ToDTO(purchase);
+        }
+
+        public Purchase FromDTO(PurchaseDTO purchaseDTO) =>
+            new Purchase
+            {
+                Name = purchaseDTO.Name,
+                Value = purchaseDTO.Value,
+                BuyDate= purchaseDTO.BuyDate
+            };
+
         private static PurchaseDTO ToDTO(Purchase purchase) =>
             new PurchaseDTO
             {
