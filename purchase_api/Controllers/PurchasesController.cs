@@ -33,14 +33,14 @@ namespace purchase_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PurchaseDTO>> GetPurchase(long id)
         {
-            var purchase = await _context.Purchases.FindAsync(id);
+            var purchaseDTO = await _purchaseService.Find(id);
 
-            if (purchase == null)
+            if (purchaseDTO == null)
             {
                 return NotFound();
             }
 
-            return ToDTO(purchase);
+            return purchaseDTO;
         }
 
         [HttpPost]

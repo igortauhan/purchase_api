@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using purchase_api.Models;
 using purchase_api.Models.Dto;
 
@@ -20,6 +22,17 @@ namespace purchase_api.Services
         public async Task<List<PurchaseDTO>> FindAllAsync()
         {
             return await _context.Purchases.Select(x => ToDTO(x)).ToListAsync();
+        }
+
+        public async Task<PurchaseDTO> Find(long id)
+        {
+            var purchase = await _context.Purchases.FindAsync(id);
+            if (purchase == null)
+            {
+                return null;
+            }
+
+            return ToDTO(purchase);
         }
 
         private static PurchaseDTO ToDTO(Purchase purchase) =>
