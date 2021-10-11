@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using purchase_api.Models;
+using purchase_api.Services;
 
 namespace purchase_api
 {
@@ -32,6 +33,8 @@ namespace purchase_api
             services.AddControllers();
 
             services.AddDbContext<PurchaseContext>(opt => opt.UseInMemoryDatabase("PurchaseList"));
+
+            services.AddScoped<PurchaseService>();
 
             /*services.AddSwaggerGen(c =>
             {

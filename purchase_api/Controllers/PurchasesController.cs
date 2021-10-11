@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using purchase_api.Models;
 using purchase_api.Models.Dto;
+using purchase_api.Services;
 
 namespace purchase_api.Controllers
 {
@@ -15,16 +16,18 @@ namespace purchase_api.Controllers
     public class PurchasesController : ControllerBase
     {
         private readonly PurchaseContext _context;
+        private readonly PurchaseService _purchaseService;
 
-        public PurchasesController(PurchaseContext context)
+        public PurchasesController(PurchaseService purchaseService, PurchaseContext context)
         {
+            _purchaseService = purchaseService;
             _context = context;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PurchaseDTO>>> GetPurchases()
         {
-            return await _context.Purchases.Select(x => ToDTO(x)).ToListAsync();
+            return await _purchaseService.FindAllAsync();
         }
 
         [HttpGet("{id}")]
