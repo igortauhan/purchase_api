@@ -43,9 +43,41 @@ namespace purchase_api.Services
             return ToDTO(purchase);
         }
 
+        public async Task<Purchase> Update(Purchase newPurchase)
+        {
+            var purchase = await _context.Purchases.FindAsync(newPurchase.Id);
+            if (purchase == null)
+            {
+                return null;
+            }
+
+            UpdateData(purchase, newPurchase);
+            _context.Entry(purchase).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return null;
+            }
+
+            return purchase;
+        }
+
+        // update the data of old purchase that came from db for the new purchase data that came from request
+        public void UpdateData(Purchase purchase, Purchase newPurchase)
+        {
+            purchase.Name = newPurchase.Name;
+            purchase.Value = newPurchase.Value;
+            purchase.BuyDate = newPurchase.BuyDate;
+        }
+
         public Purchase FromDTO(PurchaseDTO purchaseDTO) =>
             new Purchase
             {
+                Id = purchaseDTO.Id,
                 Name = purchaseDTO.Name,
                 Value = purchaseDTO.Value,
                 BuyDate= purchaseDTO.BuyDate

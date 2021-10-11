@@ -61,33 +61,11 @@ namespace purchase_api.Controllers
                 return BadRequest();
             }
 
-            var purchase = await _context.Purchases.FindAsync(id);
-
+            var obj = _purchaseService.FromDTO(purchaseDTO);
+            var purchase = await _purchaseService.Update(obj);
             if (purchase == null)
             {
                 return NotFound();
-            }
-
-            purchase.Name = purchaseDTO.Name;
-            purchase.Value = purchaseDTO.Value;
-            purchase.BuyDate = purchaseDTO.BuyDate;
-
-            _context.Entry(purchase).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PurchaseExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
             }
 
             return NoContent();
