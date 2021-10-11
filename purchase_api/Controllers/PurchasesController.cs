@@ -28,7 +28,7 @@ namespace purchase_api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Purchase>> GetPurchase(long id)
+        public async Task<ActionResult<PurchaseDTO>> GetPurchase(long id)
         {
             var purchase = await _context.Purchases.FindAsync(id);
 
@@ -37,25 +37,43 @@ namespace purchase_api.Controllers
                 return NotFound();
             }
 
-            return purchase;
+            return ToDTO(purchase);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Purchase>> PostPurchase(Purchase purchase)
+        public async Task<ActionResult<PurchaseDTO>> PostPurchase(PurchaseDTO purchaseDTO)
         {
+            var purchase = new Purchase
+            {
+                Name = purchaseDTO.Name,
+                Value = purchaseDTO.Value,
+                BuyDate = purchaseDTO.BuyDate
+            };
+
             _context.Purchases.Add(purchase);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPurchase), new { id = purchase.Id }, purchase);
+            return CreatedAtAction(nameof(GetPurchase), new { id = purchase.Id }, ToDTO(purchase));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPurchase(long id, Purchase purchase)
+        public async Task<IActionResult> PutPurchase(long id, PurchaseDTO purchaseDTO)
         {
-            if (id != purchase.Id)
+            if (id != purchaseDTO.Id)
             {
                 return BadRequest();
             }
+
+            var purchase = await _context.Purchases.FindAsync(id);
+
+            if (purchase == null)
+            {
+                return NotFound();
+            }
+
+            purchase.Name = purchaseDTO.Name;
+            purchase.Value = purchaseDTO.Value;
+            purchase.BuyDate = purchaseDTO.BuyDate;
 
             _context.Entry(purchase).State = EntityState.Modified;
 
