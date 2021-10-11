@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using purchase_api.Models;
 using purchase_api.Models.Dto;
 
@@ -64,6 +62,14 @@ namespace purchase_api.Services
             }
 
             return purchase;
+        }
+
+        public async Task Delete(long id)
+        {
+            var purchase = await _context.Purchases.FindAsync(id);
+
+            _context.Purchases.Remove(purchase);
+            await _context.SaveChangesAsync();
         }
 
         // update the data of old purchase that came from db for the new purchase data that came from request

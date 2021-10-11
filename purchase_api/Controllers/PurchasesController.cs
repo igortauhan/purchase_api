@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using purchase_api.Models;
 using purchase_api.Models.Dto;
 using purchase_api.Services;
 
@@ -15,13 +14,11 @@ namespace purchase_api.Controllers
     [ApiController]
     public class PurchasesController : ControllerBase
     {
-        private readonly PurchaseContext _context;
         private readonly PurchaseService _purchaseService;
 
-        public PurchasesController(PurchaseService purchaseService, PurchaseContext context)
+        public PurchasesController(PurchaseService purchaseService)
         {
             _purchaseService = purchaseService;
-            _context = context;
         }
 
         [HttpGet]
@@ -74,30 +71,14 @@ namespace purchase_api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePurchase(long id)
         {
-            var purchase = await _context.Purchases.FindAsync(id);
-            if (purchase == null)
+            var purchaseDTO = await _purchaseService.Find(id);
+            if (purchaseDTO == null)
             {
                 return NotFound();
             }
 
-            _context.Purchases.Remove(purchase);
-            await _context.SaveChangesAsync();
-
+            await _purchaseService.Delete(id);
             return NoContent();
         }
-
-        private bool PurchaseExists(long id)
-        {
-            return _context.Purchases.Any(e => e.Id == id);
-        }
-
-        private static PurchaseDTO ToDTO(Purchase purchase) =>
-            new PurchaseDTO
-            {
-                Id = purchase.Id,
-                Name = purchase.Name,
-                Value = purchase.Value,
-                BuyDate = purchase.BuyDate
-            };
     }
 }
