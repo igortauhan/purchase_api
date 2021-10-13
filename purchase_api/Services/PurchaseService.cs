@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Net;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using purchase_api.Models;
 using purchase_api.Models.Dto;
+using purchase_api.Services.Exceptions;
 
 namespace purchase_api.Services
 {
@@ -56,9 +60,9 @@ namespace purchase_api.Services
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
-                return null;
+                throw new DbConcurrencyException(e.Message);
             }
 
             return purchase;
