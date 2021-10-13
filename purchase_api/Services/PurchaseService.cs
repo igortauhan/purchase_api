@@ -79,6 +79,7 @@ namespace purchase_api.Services
         // update the data of old purchase that came from db for the new purchase data that came from request
         public void UpdateData(Purchase purchase, Purchase newPurchase)
         {
+            purchase.Id = newPurchase.Id;
             purchase.Name = newPurchase.Name;
             purchase.Value = newPurchase.Value;
             purchase.BuyDate = newPurchase.BuyDate;
